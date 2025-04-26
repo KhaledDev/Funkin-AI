@@ -14,6 +14,7 @@ import flixel.util.FlxColor;
 import flixel.util.FlxStringUtil;
 import flixel.util.FlxTimer;
 import funkin.api.newgrounds.NGio;
+import funkin.api.ai.AIGameManager; // Import the AI Game Manager
 import funkin.audio.FunkinSound;
 import funkin.audio.VoicesGroup;
 import funkin.data.dialogue.conversation.ConversationRegistry;
@@ -619,7 +620,7 @@ class PlayState extends MusicBeatSubState
   /**
    * Called when the PlayState is switched to.
    */
-  public override function create():Void
+  override public function create():Void
   {
     if (instance != null)
     {
@@ -726,6 +727,9 @@ class PlayState extends MusicBeatSubState
       // As long as they call `PlayState.instance.startCountdown()` later, the countdown will start.
       startCountdown();
     }
+
+    // Initialize AI tracking for this play session
+    AIGameManager.instance.startPlaySession(this);
 
     // Do this last to prevent beatHit from being called before create() is done.
     super.create();
@@ -2207,7 +2211,7 @@ class PlayState extends MusicBeatSubState
         var event:NoteScriptEvent = new HitNoteScriptEvent(note, 0.0, 0, 'perfect', false, 0);
         dispatchEvent(event);
 
-        // Calling event.cancelEvent() skips all the other logic! Neat!
+        // Calling event.cancelEvent() skips the other logic! Neat!
         if (event.eventCanceled) continue;
 
         // Command the opponent to hit the note on time.
@@ -2303,7 +2307,7 @@ class PlayState extends MusicBeatSubState
         var event:NoteScriptEvent = new HitNoteScriptEvent(note, 0.0, 0, 'perfect', false, 0);
         dispatchEvent(event);
 
-        // Calling event.cancelEvent() skips all the other logic! Neat!
+        // Calling event.cancelEvent() skips the other logic! Neat!
         if (event.eventCanceled) continue;
 
         // Command the bot to hit the note on time.
@@ -2339,7 +2343,7 @@ class PlayState extends MusicBeatSubState
         var event:NoteScriptEvent = new NoteScriptEvent(NOTE_MISS, note, -Constants.HEALTH_MISS_PENALTY, 0, true);
         dispatchEvent(event);
 
-        // Calling event.cancelEvent() skips all the other logic! Neat!
+        // Calling event.cancelEvent() skips the other logic! Neat!
         if (event.eventCanceled) continue;
 
         // Skip handling the miss in botplay!
@@ -2637,6 +2641,7 @@ class PlayState extends MusicBeatSubState
 
     if (!isPracticeMode)
     {
+      // TODO: Input splitter uses old input system, make it pull from the precise input queue directly.
       var pressArray:Array<Bool> = [
         controls.NOTE_LEFT_P,
         controls.NOTE_DOWN_P,
@@ -2890,6 +2895,9 @@ class PlayState extends MusicBeatSubState
      */
   public function endSong(rightGoddamnNow:Bool = false):Void
   {
+    // Stop AI tracking
+    AIGameManager.instance.stopPlaySession();
+
     if (FlxG.sound.music != null) FlxG.sound.music.volume = 0;
     vocals.volume = 0;
     mayPauseGame = false;

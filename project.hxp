@@ -301,6 +301,9 @@ class Project extends HXProject {
 		// If for some reason we have multiple source directories, we can add more entries here.
 		this.sources.push(SOURCE_DIR);
 
+    // Explicitly add the hxWebSockets library source path to the class path
+    this.sources.push(".haxelib/hxWebSockets/1,4,0/src");
+
     // Tell Lime to run some prebuild and postbuild scripts.
     this.preBuildCallbacks.push(buildHaxeCLICommand(PREBUILD_HX));
     this.postBuildCallbacks.push(buildHaxeCLICommand(POSTBUILD_HX));
@@ -644,6 +647,8 @@ class Project extends HXProject {
     addHaxelib('jsonpatch'); // JSON parsing
 		addHaxelib('thx.core'); // General utility library, "the lodash of Haxe"
 		addHaxelib('thx.semver'); // Version string handling
+
+    addHaxelib('hxWebSockets'); // WebSocket support for AI integration
 
 		if (isDebug()) {
 			addHaxelib('hxcpp-debug-server'); // VSCode debug support

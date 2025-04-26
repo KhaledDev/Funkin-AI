@@ -38,6 +38,8 @@ import openfl.display.BitmapData;
 #if FEATURE_DISCORD_RPC
 import funkin.api.discord.DiscordClient;
 #end
+// Import our AI integration module
+import funkin.api.ai.AIGameManager;
 
 /**
  * A core class which performs initialization of the game.
@@ -57,6 +59,9 @@ class InitState extends FlxState
     // Setup a bunch of important Flixel stuff.
     setupShit();
 
+    // Initialize AI WebSocket Server
+    initAIIntegration();
+
     // Load player options from save data.
     // Flixel has already loaded the save data, so we can just use it.
     Preferences.init();
@@ -65,6 +70,15 @@ class InitState extends FlxState
     PlayerSettings.init();
 
     startGame();
+  }
+
+  /**
+   * Initialize the AI integration WebSocket server
+   */
+  function initAIIntegration():Void
+  {
+    trace("Initializing AI Integration...");
+    AIGameManager.instance.initialize();
   }
 
   /**

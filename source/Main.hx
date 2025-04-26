@@ -2,6 +2,7 @@ package;
 
 import flixel.FlxGame;
 import flixel.FlxState;
+import flixel.FlxG;
 import funkin.Preferences;
 import funkin.util.logging.CrashHandler;
 import funkin.ui.debug.MemoryCounter;
@@ -105,7 +106,6 @@ class Main extends Sprite
     // George recommends binding the save before FlxGame is created.
     Save.load();
     var game:FlxGame = new FlxGame(gameWidth, gameHeight, initialState, Preferences.framerate, Preferences.framerate, skipSplash, startFullscreen);
-
     // FlxG.game._customSoundTray wants just the class, it calls new from
     // create() in there, which gets called when it's added to stage
     // which is why it needs to be added before addChild(game) here
