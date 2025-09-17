@@ -19,6 +19,7 @@ import openfl.Lib;
 import openfl.media.Video;
 import openfl.net.NetStream;
 import funkin.util.WindowUtil;
+import funkin.funkin_socket.Client;
 
 /**
  * The main class which initializes HaxeFlixel and starts the game in its initial state.
@@ -162,6 +163,10 @@ class Main extends Sprite
     #else
     trace('hxcpp_debug_server is disabled! This build does not support debugging.');
     #end
+
+    var client = Client.getInstance();
+
+    client.connect();
   }
 
   function initHaxeUI():Void
